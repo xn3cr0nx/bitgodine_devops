@@ -1,26 +1,10 @@
 ---
-- name: Create base directory for bitgodine dashboard
+- name: Create base directory for bitgodine app
   file:
     dest: "{{ dashboard_dir }}"
     state: directory
     owner: "{{ current_user }}"
     group: "{{ current_group }}"
-
-- name: Ensure config folder exists
-  file:
-    dest: "{{ dashboard_dir }}/config"
-    state: directory
-    owner: "{{ current_user }}"
-    group: "{{ current_group }}"
-
-# - name: Upload config file
-#   template:
-#     src: "config.json.j2"
-#     dest: "{{ dashboard_dir }}/config/config.json"
-#     mode: 0600
-#     owner: "{{ current_user }}"
-#     group: "{{ current_group }}"
-#     force: true
 
 - name: Ensure logs folder exists
   file:
@@ -29,24 +13,35 @@
     owner: "{{ current_user }}"
     group: "{{ current_group }}"
 
-# - name: Log into DockerHub
-#   docker_login:
-#     username: "{{ DOCKER_USERNAME }}"
-#     password: "{{ DOCKER_PASSWORD }}"
+- name: Log into DockerHub
+  docker_login:
+    username: "{{ DOCKER_USERNAME }}"
+    password: "{{ DOCKER_PASSWORD }}"
 
-# - name: Pull docker image
-#   docker_image:
-#     name: "{{ docker_user }}/{{ docker_dashboard_image }}"
-#     source: pull
-#     state: present
-#     force_source: yes
-#     tag: latest
+- name: Pull docker image
+  docker_image:
+    name: "{{ docker_user }}/{{ docker_app_image }}"
+    source: pull
+    state: present
+    force_source: yes
+    tag: latest
 
-# - name: Check image
-#   docker_image:
-#     state: present
-#     name: "{{ docker_user }}/{{ docker_dashboard_image }}"
-#     source: pull
-#     tag: latest
-  
+- name: Check image
+  docker_image:
+    state: present
+    name: "{{ docker_user }}/{{ docker_app_image }}"
+    source: pull
+    tag: latest
+
+- name: Remove unused images
+  docker_prune:
+    images: yes
+
+- name: Run docker-compose restart on "{{ docker_app_image }}"
+  docker_compose:
+    project_src: .
+    restarted: yes
+    services: "{{ docker_app_image }}"
+  register: output
+
 - include: nginx.yml
