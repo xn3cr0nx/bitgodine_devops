@@ -1,0 +1,16 @@
+---
+email: patrick.jusic@uspace.it
+ansible_ssh_user: root
+current_user: bitgodine
+current_group: bitgodine
+docker_user: xn3cr0nx
+postgres_port: 5432
+pgadmin_port: 9876
+services_dir: /var/http
+bitgodine_dir: "{{ services_dir }}/bitgodine"
+dashboard_dir: "{{ bitgodine_dir }}/dashboard"
+docker_dashboard_image: bitgodine_dashboard
+dashboard_port: 5001
+server_dir: "{{ bitgodine_dir }}/server"
+server_port: 3001
+docker_server_image: bitgodine_dashboard

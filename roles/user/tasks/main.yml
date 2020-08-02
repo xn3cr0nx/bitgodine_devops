@@ -1,0 +1,25 @@
+---
+- name: Create bitgodine group
+  group:
+    name: "{{ current_group }}"
+    state: present
+
+- name: Create bitgodine user
+  user:
+    name: "{{ current_user }}"
+    shell: /bin/bash
+    groups: "{{ current_group }}"
+    state: present
+
+- name: Configure sudo for the bitgodine user
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: "{{ current_user }}   ALL=(ALL:ALL) NOPASSWD: ALL"
+    validate: "/usr/sbin/visudo -cf %s"
+
+# - name: Set authorized key for user bitgodine copying it from current user
+#   authorized_key:
+#     user: "{{ current_user }}"
+#     state: present
+#     key: "{{ lookup('file', 'files/id_rsa_bitgodine.pub') }}"

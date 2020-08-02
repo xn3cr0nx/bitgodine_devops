@@ -1,0 +1,52 @@
+---
+- name: Create base directory for bitgodine server
+  file:
+    dest: "{{ server_dir }}"
+    state: directory
+    owner: "{{ current_user }}"
+    group: "{{ current_group }}"
+
+- name: Ensure config folder exists
+  file:
+    dest: "{{ server_dir }}/config"
+    state: directory
+    owner: "{{ current_user }}"
+    group: "{{ current_group }}"
+
+# - name: Upload config file
+#   template:
+#     src: "config.json.j2"
+#     dest: "{{ server_dir }}/config/config.json"
+#     mode: 0600
+#     owner: "{{ current_user }}"
+#     group: "{{ current_group }}"
+#     force: true
+
+- name: Ensure logs folder exists
+  file:
+    dest: "{{ server_dir }}/logs"
+    state: directory
+    owner: "{{ current_user }}"
+    group: "{{ current_group }}"
+
+# - name: Log into DockerHub
+#   docker_login:
+#     username: "{{ DOCKER_USERNAME }}"
+#     password: "{{ DOCKER_PASSWORD }}"
+
+# - name: Pull docker image
+#   docker_image:
+#     name: "{{ docker_user }}/{{ docker_server_image }}"
+#     source: pull
+#     state: present
+#     force_source: yes
+#     tag: latest
+
+# - name: Check image
+#   docker_image:
+#     state: present
+#     name: "{{ docker_user }}/{{ docker_server_image }}"
+#     source: pull
+#     tag: latest
+  
+- include: nginx.yml

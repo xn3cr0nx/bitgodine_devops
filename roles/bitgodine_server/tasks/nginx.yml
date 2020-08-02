@@ -1,0 +1,79 @@
+---
+- name: Include shared nginx installation
+  include_role:
+    name: nginx
+
+- name: Add LE certificate with certbot
+  include_role:
+    name: certbot
+    apply:
+      become: yes
+  vars:
+    certbot_admin_email: "{{ email }}"
+    certbot_auto_renew: true
+    certbot_create_if_missing: true
+    certbot_create_standalone_stop_services:
+      - nginx
+    certbot_certs:
+      - domains:
+        - "{{ hostname }}"
+
+# - name: Ensure cert directory exists
+#   when: env == 'production'
+#   file:
+#     path: /etc/nginx/certs
+#     state: directory
+
+- name: Upload dashboard nginx config file
+  template:
+    src: "nginx.conf.j2"
+    dest: "/etc/nginx/sites-available/bitgodine"
+    owner: "{{ current_user }}"
+    group: "{{ current_group }}"
+
+- name: Unlink default nginx config file
+  file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+
+- name: Enable dashboard nginx config file
+  file:
+    src: "/etc/nginx/sites-available/bitgodine"
+    dest: "/etc/nginx/sites-enabled/bitgodine"
+    owner: "{{ current_user }}"
+    group: "{{ current_group }}"
+    state: link
+
+# - name: Add htpasswd file
+#   copy:
+#     src: "files/.htpasswd"
+#     dest: "/etc/nginx/.htpasswd"
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+- name: "Add logrotation for log files of Exchange nginx"
+  include_role:
+    name: logrotate
+    apply:
+      become: yes
+  vars:
+    logrotate_scripts:
+      - name: bitgodine_nginx
+        path: /var/log/nginx/bitgodine-*.log
+        options:
+          - hourly
+          - size 25M
+          - missingok
+          - compress
+          - delaycompress
+          - copytruncate
+
+- name: copy logrotate from /etc/cron.daily to /etc/cron.hourly
+  copy:
+    src: /etc/cron.daily/logrotate
+    remote_src: yes
+    dest: /etc/cron.hourly
+    mode: 0644

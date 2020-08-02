@@ -1,0 +1,6 @@
+# ignore environment test file
+*.env
+
+# ignore vault password
+vault_password
+vault-password

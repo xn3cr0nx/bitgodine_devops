@@ -1,0 +1,38 @@
+server {
+    server_name {{ hostname }};
+
+    listen 443 ssl;
+
+    access_log {{bitgodine_server_nginx_access_log}} combined;
+    error_log {{bitgodine_server_nginx_error_log}} error;
+
+    # location / {
+    #     return 301 https://$host/api/$request_uri;        
+    # }
+
+    location /api {
+        proxy_pass http://127.0.0.1:{{server_port}};
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    ssl_certificate /etc/letsencrypt/live/{{ hostname }}/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/{{ hostname }}/privkey.pem; # managed by Certbot
+}
+
+server {
+    if ($host = {{ hostname }}) {
+        return 301 https://$host$request_uri;
+    }
+
+    access_log {{bitgodine_server_nginx_access_log}} combined;
+    error_log {{bitgodine_server_nginx_error_log}} error;
+
+    listen 80;
+
+    server_name {{ hostname }};
+    return 404;
+}

@@ -1,0 +1,19 @@
+- src: geerlingguy.docker
+  name: docker
+  version: 2.6.0
+
+- src: geerlingguy.pip
+  name: pip
+  version: 1.3.0
+
+- src: geerlingguy.nodejs
+  name: nodejs
+  version: 5.0.0
+
+- src: geerlingguy.certbot
+  name: certbot
+  version: 3.0.2
+
+- src: nickhammond.logrotate
+  name: logrotate
+  version: v0.0.5

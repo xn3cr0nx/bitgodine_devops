@@ -1,0 +1,20 @@
+---
+- name: Create docker-compose file
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "docker-compose.yml"
+    owner: "{{ current_user }}"
+    group: "{{ current_group }}"
+    backup: no
+    force: yes
+
+- name: Run docker-compose up
+  docker_compose:
+    project_src: .
+    restarted: yes
+    state: present
+  register: output
+
+- name: Print docker-compose up output
+  debug:
+    var: output

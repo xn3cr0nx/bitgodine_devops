@@ -1,0 +1,5 @@
+hostname: bitgodine.com
+dashboard_hostname: app.bitgodine.com
+postgres_user: test
+postgres_password: test
+pgadmin_password: test

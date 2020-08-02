@@ -1,0 +1,3 @@
+---
+bitgodine_server_nginx_access_log: "/var/log/nginx/bitgodine-server-access.log"
+bitgodine_server_nginx_error_log: "/var/log/nginx/bitgodine-server-error.log"

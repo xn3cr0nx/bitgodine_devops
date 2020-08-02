@@ -1,0 +1,33 @@
+---
+- hosts: contabo
+  user: "{{ ansible_ssh_user }}"
+  become: yes
+  roles:
+    - user
+    - common
+    - pip
+  #   - role: docker
+  #     docker_install_compose: true
+  # vars:
+  #   pip_install_packages:
+  #     - name: docker
+  #     - name: docker-compose
+
+- hosts: contabo
+  user: "{{ current_user }}"
+  become: yes
+  become_user: root
+  roles:
+    - role: bitgodine_dashboard
+    - role: bitgodine_server
+      # when: TRIGGER_REPOSITORY | default("") == "xn3cr0nx/bitgodine"
+  vars:
+    DOCKER_USERNAME: "{{ DOCKER_USERNAME }}"
+    DOCKER_PASSWORD: "{{ DOCKER_PASSWORD }}"
+
+# - hosts: contabo
+#   user: "{{ current_user }}"
+#   become: yes
+#   become_user: root
+#   roles:
+#     - compose

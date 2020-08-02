@@ -1,0 +1,38 @@
+---
+- name: Install common packages
+  apt:
+    name:
+      - build-essential
+      - curl
+      - git
+      - htop
+      - iotop
+      - libssl-dev
+      - make
+      - python-pip
+      - python3
+      - tmux
+      - vim
+    state: present
+    update_cache: yes
+
+- name: Ensure python docker and docker-compose is installed
+  pip:
+    name:
+      - docker
+      - docker-compose
+
+# - name: Install resolvconf package
+#   apt:
+#     name: resolvconf
+
+# - name: Edit resolvconf default head
+#   lineinfile:
+#     path: /etc/resolvconf/resolv.conf.d/head
+#     create: yes
+#     line: "nameserver 1.1.1.1"
+
+# - name: Restart resolvconf
+#   service:
+#     name: resolvconf
+#     state: restarted
