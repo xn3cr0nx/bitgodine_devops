@@ -9,7 +9,6 @@
       - iotop
       - libssl-dev
       - make
-      - python-pip
       - python3
       - tmux
       - vim
