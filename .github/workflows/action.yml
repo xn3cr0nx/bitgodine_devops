@@ -29,7 +29,7 @@ jobs:
         run: ansible-galaxy install -f -r roles/requirements.yml
 
       - name: Run ansible playbook
-        run: ansible-playbook -e env=$TRIGGER_BRANCH -e TRIGGER_SHA=$TRIGGER_SHA -e TRIGGER_REF=$TRIGGER_REF -e TRIGGER_REPOSITORY=$TRIGGER_REPOSITORY -e DOCKER_USERNAME=$DOCKER_USERNAME -e DOCKER_PASSWORD=$DOCKER_PASSWORD --vault-password-file vault_password -i inventories/staging_aws_ec2.yml playbook.yml
+        run: ansible-playbook -e env=$TRIGGER_BRANCH -e TRIGGER_SHA=$TRIGGER_SHA -e TRIGGER_REF=$TRIGGER_REF -e TRIGGER_REPOSITORY=$TRIGGER_REPOSITORY -e DOCKER_USERNAME=$DOCKER_USERNAME -e DOCKER_PASSWORD=$DOCKER_PASSWORD --vault-password-file vault_password -i hosts.ini playbook.yml
         env:
           VAULT_PASS: ${{ secrets.VAULT_PASS }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
